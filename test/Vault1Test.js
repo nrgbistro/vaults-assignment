@@ -8,30 +8,30 @@ describe("Vault 1", () => {
 	let exToken;
 
 	beforeEach(async () => {
-		const Vault1 = await ethers.getContractFactory("Vault1");
-		const Token = await ethers.getContractFactory("ExampleToken");
 		const accounts = await ethers.getSigners();
-
 		owner = accounts[0];
 		account1 = accounts[1];
 
+		const Vault1 = await ethers.getContractFactory("Vault1");
 		vault1 = await Vault1.deploy();
-		exToken = await Token.deploy(1000);
-
 		await vault1.deployed();
+
+		const Token = await ethers.getContractFactory("ExampleToken");
+		exToken = await Token.deploy(1000);
 		await exToken.deployed();
 	});
 
 	describe("deposit", function () {
 		it("should emit deposited event when funds are deposited", async function () {
+			console.log(vault1);
+
 			await exToken.approve(vault1, 10);
-			expect(
-				vault1
-					.connect(owner)
-					.deposit(5)
-					.to.emit(vault1, "Deposited")
-					.withArgs(5)
-			);
+
+			console.log("FLAG");
+
+			expect(vault1.connect(owner).deposit(5))
+				.to.emit(vault1, "Deposited")
+				.withArgs(5);
 		});
 	});
 });
